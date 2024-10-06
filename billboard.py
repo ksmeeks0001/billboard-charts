@@ -136,7 +136,7 @@ class ChartData:
     """
 
     def __init__(
-        self, name, date=None, year=None, fetch=True, max_retries=5, timeout=25
+        self, name, date=None, year=None, fetch=True, max_retries=5, timeout=25, headers=None
     ):
         """Constructs a new ChartData instance.
 
@@ -186,6 +186,7 @@ class ChartData:
 
         self._max_retries = max_retries
         self._timeout = timeout
+        self._headers = headers
 
         self.entries = []
         if fetch:
@@ -506,6 +507,8 @@ class ChartData:
 
 def _get_session_with_retries(max_retries):
     session = requests.Session()
+    if self._headers is not None:
+        session.headers.update(self._headers)
     session.mount(
         "https://www.billboard.com",
         requests.adapters.HTTPAdapter(max_retries=max_retries),
