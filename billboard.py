@@ -494,7 +494,7 @@ class ChartData:
         else:
             url = "https://www.billboard.com/charts/%s/%s" % (self.name, self.date)
 
-        session = _get_session_with_retries(max_retries=self._max_retries)
+        session = self._get_session_with_retries(max_retries=self._max_retries)
         req = session.get(url, timeout=self._timeout)
         if req.status_code == 404:
             message = "Chart not found (perhaps the name is misspelled?)"
@@ -505,12 +505,12 @@ class ChartData:
         self._parsePage(soup)
 
 
-def _get_session_with_retries(max_retries):
-    session = requests.Session()
-    if self._headers is not None:
-        session.headers.update(self._headers)
-    session.mount(
-        "https://www.billboard.com",
-        requests.adapters.HTTPAdapter(max_retries=max_retries),
-    )
-    return session
+    def _get_session_with_retries(self, max_retries):
+        session = requests.Session()
+        if self._headers is not None:
+            session.headers.update(self._headers)
+        session.mount(
+            "https://www.billboard.com",
+            requests.adapters.HTTPAdapter(max_retries=max_retries),
+        )
+        return session
